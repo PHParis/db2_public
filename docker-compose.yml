@@ -1,0 +1,66 @@
+services:
+  oracle:
+    image: container-registry.oracle.com/database/free:23.5.0.0-lite
+    container_name: oracle-db
+    environment:
+      - ORACLE_PWD=MySuperPassword2024 # The ADMIN_PASSWORD must be between 12 and 30 characters long and must include at least one uppercase letter, one lowercase letter, and one numeric
+      - ORACLE_PDB=MYPDB
+    shm_size: 1gb
+    tmpfs:
+      - /dev/shm
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./scripts:/opt/oracle/scripts/startup
+    restart: always
+    healthcheck:
+      # test: ["CMD", "sqlplus", "-L", "PH/MySuperPassword2024@//localhost:1521/MYPDB", "<<EOF", "SELECT 1 FROM DUAL;", "EXIT;", "EOF"]
+      # test: ["CMD", "bash", "-c", "sqlplus -S sys/MySuperPassword2024@//localhost:1521/FREE as sysdba <<EOF SET PAGESIZE 0 FEEDBACK OFF VERIFY OFF HEADING OFF ECHO OFF; SELECT CASE WHEN COUNT(*) > 0 THEN 'USER_EXISTS' ELSE 'USER_NOT_FOUND' END FROM dba_users WHERE username IN ('C##PH', 'PH'); EXIT; EOF" | grep -q "USER_EXISTS"]
+      test:
+        - CMD
+        - bash
+        - -c
+        - |
+          sqlplus -S sys/MySuperPassword2024@//localhost:1521/MYPDB as sysdba <<EOF 
+          SET PAGESIZE 0 FEEDBACK OFF VERIFY OFF HEADING OFF ECHO OFF;
+          SELECT CASE WHEN COUNT(*) > 0 THEN 'USER_EXISTS' ELSE 'USER_NOT_FOUND' END 
+          FROM dba_users 
+          WHERE username = 'PH';
+          EXIT;
+          EOF | grep -q "USER_EXISTS"
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+  
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile-php
+    container_name: php-server
+    volumes:
+      - ./php:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      oracle:
+        condition: service_healthy
+    command: apache2-foreground
+
+  java:
+    build:
+      context: .
+      dockerfile: Dockerfile-java
+    container_name: java-app
+    volumes:
+      - ./java:/app
+    working_dir: /app
+    depends_on:
+      oracle:
+        condition: service_healthy
+    command: tail -f /dev/null
+
+volumes:
+  oracle-data:

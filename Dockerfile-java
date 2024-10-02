@@ -1,0 +1,11 @@
+FROM openjdk:24-jdk-slim
+
+WORKDIR /app/lib
+
+# Install the necessary tools
+RUN apt-get update && apt-get install -y curl
+
+# Download Oracle JDBC driver
+RUN curl -o ojdbc11.jar https://download.oracle.com/otn-pub/otn_software/jdbc/235/ojdbc11.jar
+
+WORKDIR /app
