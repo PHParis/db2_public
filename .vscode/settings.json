@@ -18,5 +18,6 @@
             "username": "PH",
             "password": "MySuperPassword2024"
         }
-    ]
+    ],
+    "sqltools.useNodeRuntime": true
 }

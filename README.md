@@ -7,7 +7,12 @@ Etudiants : L3 Miage CFA
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [VScode](https://code.visualstudio.com/download) et ces extensions :
   - [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
-  - [Oracle Developer Tools for VS Code (SQL and PLSQL)](https://marketplace.visualstudio.com/items?itemName=Oracle.oracledevtools)
+  - [SQLTools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools)
+    - [SQLTools Oracle Driver
+](https://marketplace.visualstudio.com/items?itemName=hurly.sqltools-oracle-driver)
+    - Vous devez installer `node`, puis :
+      - `cd /home/<user>/.local/share/vscode-sqltools` 
+      - `npm install oracledb`
   - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
   - [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
   - [PHP Intelephense](https://marketplace.visualstudio.com/items?itemName=bmewburn.vscode-intelephense-client)
@@ -33,16 +38,17 @@ Cette commande sera à lancer **à chaque début de TP**. La première fois pren
 
 ### Base de données Oracle
 
-Dans l'extension `Oracle Explorer`, ajouter une nouvelle connexion avec les paramètres suivant :
+Dans l'extension `SQLTools`, ajouter une nouvelle connexion avec les paramètres suivant :
 
-- **Connection Type**: `Basic (Host, Port, Service Name)`
-- **Database host name**: `localhost`
-- **Port number**: `1521`
-- **Service name**: `MYPDB`
-- **Role**: `Default`
-- **User name**: `PH`
+- **Connection name**: `BD2_lab`
+- **Connection using**: `Server and Port`
+- **Server Address**: `localhost`
+- **Port**: `1521`
+- **Database**: `MYPDB`
+- **Username**: `PH`
+- **Use password**: `Save password`
 - **Password**: `MySuperPassword2024`
-- Cochez `Save password`
+- **privilege**: `Normal`
 
 Cliquez sur `Test Connection` pour vérifier que tout marche correctement (`Test connection succeeded.`).
 
