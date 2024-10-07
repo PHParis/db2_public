@@ -1,5 +1,5 @@
 {
-    "php.validate.executablePath": "docker-php.sh",
+    // "php.validate.executablePath": "docker-php.sh",
     "sqltools.connections": [
         {
             "oracleOptions": {
