@@ -19,5 +19,5 @@
             "password": "MySuperPassword2024"
         }
     ],
-    "sqltools.useNodeRuntime": true
+    "sqltools.useNodeRuntime": false
 }
